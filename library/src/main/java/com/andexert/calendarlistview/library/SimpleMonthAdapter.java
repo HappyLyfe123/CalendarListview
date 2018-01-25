@@ -45,18 +45,27 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
     private final SelectedDays<CalendarDay> selectedDays;
     private final Integer firstMonth;
     private final Integer lastMonth;
+    private Calendar nextSixMonth;
 
 	public SimpleMonthAdapter(Context context, DatePickerController datePickerController, TypedArray typedArray) {
         this.typedArray = typedArray;
         calendar = Calendar.getInstance();
+	setNextSixMonth();
         firstMonth = typedArray.getInt(R.styleable.DayPickerView_firstMonth, calendar.get(Calendar.MONTH));
-        lastMonth = typedArray.getInt(R.styleable.DayPickerView_lastMonth, (calendar.get(Calendar.MONTH) - 1) % MONTHS_IN_YEAR);
+        lastMonth = nextSixMonth.get(Calendar.MONTH);
         selectedDays = new SelectedDays<>();
 		mContext = context;
 		mController = datePickerController;
 		init();
 	}
+	
+    private void setNextSixMonth(){
+        nextSixMonth = Calendar.getInstance();
+        nextSixMonth.set(Calendar.getInstance().get(Calendar.YEAR),Calendar.getInstance().get(Calendar.MONTH),
+                Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH) + 1);
+        nextSixMonth.add(Calendar.MONTH, 6);
 
+    }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
     {
